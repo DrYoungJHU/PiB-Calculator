@@ -14,33 +14,29 @@
   <h2>Particle in a Box: Emitted Wavelength Calculator</h2>
 
   <label for="n1">Initial Quantum Number (n<sub>i</sub>):</label>
-  <input type="number" id="n1" min="1" required><br><br>
+<input type="number" id="n1" min="1" required oninput="calculateWavelength()"><br><br>
 
-  <label for="n2">Final Quantum Number (n<sub>f</sub>):</label>
-  <input type="number" id="n2" min="1" required><br><br>
+<label for="n2">Final Quantum Number (n<sub>f</sub>):</label>
+<input type="number" id="n2" min="1" required oninput="calculateWavelength()"><br><br>
 
-  <label for="length">Box Length (L, in A):</label>
-  <input type="number" id="length" step="any" required><br><br>
+<label for="length">Box Length (L, in nm):</label>
+<input type="number" id="length" step="any" required oninput="calculateWavelength()"><br><br>
 
-  <p>Select Particle Mass:</p>
-  <input type="radio" id="electronMass" name="massOption" value="electron" checked onclick="toggleCustomMass(false)">
-  <label for="electronMass">Use Electron Mass (9.109×10⁻³¹ kg)</label><br>
+<p>Select Particle Mass:</p>
+<input type="radio" id="electronMass" name="massOption" value="electron" checked onclick="toggleCustomMass(false); calculateWavelength()">
+<label for="electronMass">Use Electron Mass (9.109×10⁻³¹ kg)</label><br>
 
-  <input type="radio" id="customMass" name="massOption" value="custom" onclick="toggleCustomMass(true)">
-  <label for="customMass">Use Custom Mass</label><br>
+<input type="radio" id="customMass" name="massOption" value="custom" onclick="toggleCustomMass(true); calculateWavelength()">
+<label for="customMass">Use Custom Mass</label><br>
 
-  <div id="customMassInput">
-    <label for="mass">Custom Mass (kg):</label>
-    <input type="number" id="mass" step="any"><br>
-  </div><br>
-
-  <button onclick="calculateWavelength()">Calculate Wavelength</button>
+<div id="customMassInput">
+  <label for="mass">Custom Mass (kg):</label>
+  <input type="number" id="mass" step="any" oninput="calculateWavelength()"><br>
+</div><br>
 
   <h3>Results:</h3>
   <p id="output-m"></p>
   <p id="output-nm"></p>
-  <p id="output-n"></p>
-  <p id="output-denom"></p>
 
   <script>
     function toggleCustomMass(show) {
@@ -54,10 +50,12 @@
       const massOption = document.querySelector('input[name="massOption"]:checked').value;
       let m;
 
-      if (!n1 || !n2 || !L_nm || n1 === n2 || n1 < 1 || n2 < 1) {
-        alert("Please enter valid quantum numbers and box length. n₁ and n₂ must be different and ≥ 1.");
-        return;
-      }
+
+      if (!n1 || !n2 || !L_nm || n1 === n2 || n1 < 1 || n2 < 1 || (massOption === "custom" && (!document.getElementById("mass").value))) {
+  document.getElementById("output-m").innerText = "";
+  document.getElementById("output-nm").innerText = "";
+  return;
+}
 
       if (massOption === "electron") {
         m = 9.10938356e-31; // electron mass in kg
